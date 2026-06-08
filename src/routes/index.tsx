@@ -2,8 +2,12 @@
 import { createBrowserRouter } from "react-router";
 
 import { PostsPage } from "../pages/posts";
-import { PostById } from "../pages/post-info";
+
 import { MainLayout } from "../layouts/main.layout";
+import { fetchPostByIdLoader, PostById } from "../pages/post-by-id";
+import { NotFound } from "../components/not-found";
+import { ErrorBoundary } from "../components/errorBoundary";
+
 // import Home from "../pages/Home";
 // import About from "../pages/About";
 // import UserProfile from "../pages/UserProfile";
@@ -21,15 +25,24 @@ const router = createBrowserRouter([
     element: (
        <h1 className="text-3xl font-bold underline">Landing Page</h1>
     ),
+    errorElement: <ErrorBoundary />,
+    
   
   },
 {
   element:<MainLayout />,
+  hydrateFallbackElement: <div>Loading...</div>, // Add this
   children: [
     {
         path: "posts",
         element: <PostsPage />,
-        // errorElement: <ErrorBoundary />,
+        errorElement: <ErrorBoundary />,
+      }, 
+         {
+        path: "post-info/:id",
+        element: <PostById />,
+        errorElement: <ErrorBoundary />,
+        loader: fetchPostByIdLoader,
       },
     
       {
@@ -37,8 +50,19 @@ const router = createBrowserRouter([
         element: <div>Users</div>,
         // loader: fetchPostByIdLoader,  
       },
+{
+  path: "/404",
+  element: <NotFound />,
+},
   ]
-}
+},
+
+// {
+//   path:"*",
+//   element: (
+//     <NotFound />
+//   )
+// }
 
       
    
